@@ -6,8 +6,8 @@
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
 // @author       qoomonu
-// @match        https://*.atlassian.net/jira/core/projects/*/board
-// @match        https://*.atlassian.net/jira/core/projects/*
+// @match        https://*.atlassian.net/jira/software/c/projects/*/boards/*
+// @match        https://*.atlassian.net/jira/software/c/projects/*
 // @icon         https://www.atlassian.com/favicon.ico
 // @grant        none
 // ==/UserScript==
@@ -19,7 +19,7 @@ window.addEventListener('changestate', async () => {
     'use strict';
 
     if(![
-      document.location.pathname.match(/^\/jira\/core\/projects\/[^/]+\/board$/),
+      document.location.pathname.match(/^\/jira\/software\/c\/projects\/[^/]+\/boards\/[^/]+$/),
     ].some(Boolean)) {
        console.debug('skip', document.location.pathname);
        return
