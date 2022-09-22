@@ -12,6 +12,9 @@
 // @grant        none
 // ==/UserScript==
 
+const labelsFieldName = 'Labels'
+const labelsEmptyValue = 'None'
+
 window.addEventListener('changestate', async () => {
     'use strict';
 
@@ -42,15 +45,14 @@ window.addEventListener('changestate', async () => {
             card.element._coloredLabels = true
 
             if(project.type === 'company') {
-                const extraFieldName = 'Labels'
-                const extraFieldEmptyValue = 'None'
-                const labelElement = card.element.querySelector(`span[data-tooltip^="${extraFieldName}:"].ghx-extra-field`)
+
+                const labelElement = card.element.querySelector(`span[data-tooltip^="${labelsFieldName}:"].ghx-extra-field`)
                 if(labelElement){
                     labelElement.parentNode.style.maxHeight = 'fit-content'
 
                     const labelContentElement = labelElement.querySelector('span.ghx-extra-field-content')
 
-                    const labels = labelElement.getAttribute('data-tooltip').endsWith(`: ${extraFieldEmptyValue}`) ? [] : labelContentElement.innerText.split(', ')
+                    const labels = labelElement.getAttribute('data-tooltip').endsWith(`: ${labelsEmptyValue}`) ? [] : labelContentElement.innerText.split(', ')
 
                     if(labels.length) {
                         labelContentElement.innerText = ''
