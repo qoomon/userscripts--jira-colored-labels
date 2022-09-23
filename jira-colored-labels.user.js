@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Colored Labels
 // @namespace    https://qoomon.github.io
-// @version      1.1.2
+// @version      1.1.3
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
@@ -25,6 +25,7 @@ window.addEventListener('changestate', async () => {
     if(![
       document.location.pathname.match(/^\/jira\/core\/projects\/[^/]+\/board$/),
       document.location.pathname.match(/^\/jira\/software\/c\/projects\/[^/]+\/boards\/[^/]+$/),
+      document.location.pathname.match(/^\/jira\/software\/c\/projects\/[^/]+\/boards\/[^/]+\/backlog$/),
     ].some(Boolean)) {
        console.debug('skip', document.location.pathname);
        return
@@ -64,7 +65,6 @@ window.addEventListener('changestate', async () => {
                           display: flex;
                           flex-wrap: wrap;
                           gap: 4px;
-                          margin: 4px 0;
                         `
                         labels.forEach(label => {
                             const spanElement = document.createElement('span')
@@ -73,7 +73,7 @@ window.addEventListener('changestate', async () => {
                               color: ${hashColor(label, 91, 20)};
                               background-color: ${hashColor(label, 100, 95)};
                               border-radius: 3px;
-                              padding: 2px 4px;
+                              padding: 0px 4px;
                               overflow: hidden;
                               text-overflow: ellipsis;
                             `
@@ -108,7 +108,7 @@ window.addEventListener('changestate', async () => {
             }))
         }
         if(project.type === 'company') {
-            return [...document.querySelectorAll('.ghx-issue')].map(element => ({
+            return [...document.querySelectorAll('.js-issue')].map(element => ({
                 key: element.getAttribute('data-issue-key'),
                 element
             }))
