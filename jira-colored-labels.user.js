@@ -5,7 +5,7 @@
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
-// @author       qoomonu
+// @author       qoomon
 // @match        https://*.atlassian.net/jira/core/projects/*/board
 // @match        https://*.atlassian.net/jira/core/projects/*
 // @match        https://*.atlassian.net/jira/software/c/projects/*/boards/*
@@ -16,6 +16,8 @@
 
 const labelsFieldName = 'Labels'
 const labelsEmptyValue = 'None'
+
+// -----------------------------------------------------------------------------
 
 window.addEventListener('changestate', async () => {
     'use strict';
@@ -48,7 +50,6 @@ window.addEventListener('changestate', async () => {
             card.element._coloredLabels = true
 
             if(project.type === 'company') {
-
                 const labelElement = card.element.querySelector(`span[data-tooltip^="${labelsFieldName}:"].ghx-extra-field`)
                 if(labelElement){
                     labelElement.parentNode.style.maxHeight = 'fit-content'
@@ -63,17 +64,18 @@ window.addEventListener('changestate', async () => {
                           display: flex;
                           flex-wrap: wrap;
                           gap: 4px;
+                          margin: 4px 0;
                         `
                         labels.forEach(label => {
                             const spanElement = document.createElement('span')
                             spanElement.innerText = label
                             spanElement.style.cssText = `
                               color: ${hashColor(label, 91, 20)};
-                              white-space: nowrap;
                               background-color: ${hashColor(label, 100, 95)};
                               border-radius: 3px;
                               padding: 2px 4px;
-                              margin: 4px 0;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
                             `
                             labelContentElement.appendChild(spanElement)
                         })
@@ -82,13 +84,13 @@ window.addEventListener('changestate', async () => {
             }
 
             if(project.type === 'team') {
-                const labelElement = [...card.element.querySelectorAll(':scope > div > div > div:has( >span)')].filter(e => window.getComputedStyle(e).display === 'flex')[0]
+                const labelElement = [...card.element.querySelectorAll(':scope > div > div > div:has( >span)')].find(e => window.getComputedStyle(e).display === 'flex')
                 if(labelElement) {
-                    ;[...labelElement.querySelectorAll(':scope > span')].forEach(spanElement => {
+                    [...labelElement.querySelectorAll(':scope > span')].forEach(spanElement => {
+                        const label = spanElement.innerText
                         spanElement.style.cssText = `
-                          color: ${hashColor(spanElement.innerText, 91, 20)};
-                          white-space: nowrap;
-                          background-color: ${hashColor(spanElement.innerText, 100, 95)};
+                          color: ${hashColor(label, 91, 20)};
+                          background-color: ${hashColor(label, 100, 95)};
                         `
                     })
                 }
