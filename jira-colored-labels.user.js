@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Colored Labels
 // @namespace    https://qoomon.github.io
-// @version      1.1.0
+// @version      1.1.1
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
@@ -84,8 +84,8 @@ window.addEventListener('changestate', async () => {
             }
 
             if(project.type === 'team') {
-                const labelElement = [...card.element.querySelectorAll(':scope > div > div > div:has( >span)')].find(e => window.getComputedStyle(e).display === 'flex')
-                if(labelElement) {
+                const labelElements = [...card.element.querySelectorAll(':scope > div > div > div:has( >span)')].filter(e => window.getComputedStyle(e).display === 'flex')
+                labelElements.forEach( labelElement => {
                     [...labelElement.querySelectorAll(':scope > span')].forEach(spanElement => {
                         const label = spanElement.innerText
                         spanElement.style.cssText = `
@@ -93,7 +93,7 @@ window.addEventListener('changestate', async () => {
                           background-color: ${hashColor(label, 100, 95)};
                         `
                     })
-                }
+                })
             }
         })
     }
