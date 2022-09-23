@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Jira Colored Labels
 // @namespace    https://qoomon.github.io
-// @version      1.0.0
+// @version      1.1.0
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
 // @author       qoomonu
+// @match        https://*.atlassian.net/jira/core/projects/*/board
+// @match        https://*.atlassian.net/jira/core/projects/*
 // @match        https://*.atlassian.net/jira/software/c/projects/*/boards/*
 // @match        https://*.atlassian.net/jira/software/c/projects/*
 // @icon         https://www.atlassian.com/favicon.ico
@@ -19,6 +21,7 @@ window.addEventListener('changestate', async () => {
     'use strict';
 
     if(![
+      document.location.pathname.match(/^\/jira\/core\/projects\/[^/]+\/board$/),
       document.location.pathname.match(/^\/jira\/software\/c\/projects\/[^/]+\/boards\/[^/]+$/),
     ].some(Boolean)) {
        console.debug('skip', document.location.pathname);
@@ -65,18 +68,29 @@ window.addEventListener('changestate', async () => {
                             const spanElement = document.createElement('span')
                             spanElement.innerText = label
                             spanElement.style.cssText = `
-                              color: white;
-                              font-size: 10px;
-                              font-weight: bold;
+                              color: ${hashColor(label, 91, 20)};
                               white-space: nowrap;
-                              background-color: ${hashColor(label)};
-                              border-radius: 48px;
-                              padding: 3px 8px;
+                              background-color: ${hashColor(label, 100, 95)};
+                              border-radius: 3px;
+                              padding: 2px 4px;
                               margin: 4px 0;
                             `
                             labelContentElement.appendChild(spanElement)
                         })
                     }
+                }
+            }
+
+            if(project.type === 'team') {
+                const labelElement = [...card.element.querySelectorAll(':scope > div > div > div:has( >span)')].filter(e => window.getComputedStyle(e).display === 'flex')[0]
+                if(labelElement) {
+                    ;[...labelElement.querySelectorAll(':scope > span')].forEach(spanElement => {
+                        spanElement.style.cssText = `
+                          color: ${hashColor(spanElement.innerText, 91, 20)};
+                          white-space: nowrap;
+                          background-color: ${hashColor(spanElement.innerText, 100, 95)};
+                        `
+                    })
                 }
             }
         })
@@ -86,9 +100,8 @@ window.addEventListener('changestate', async () => {
 
     function getBoardCards() {
         if(project.type === 'team') {
-            const projectKey = document.location.pathname.match(/\/projects\/(?<project>[^/]+)\//).groups.project
             return [...document.querySelectorAll('div[data-rbd-draggable-id^="ISSUE::"]')].map(element => ({
-                key: [...element.querySelectorAll('span')].find(e => e.innerText.startsWith(`${projectKey}-`)).innerText,
+                key: [...element.querySelectorAll('span')].find(e => e.innerText.startsWith(`${project.key}-`)).innerText,
                 element
             }))
         }
@@ -137,13 +150,10 @@ async function untilDefined(fn) {
         })
 }
 
-function hashColor(str) {
+function hashColor(str, saturation = 50, lightness = 50, alpha = 100) {
     const hash = BKDRHash(str)
     const hue = hash % 359
-    const saturation = 50
-    const lightness = 50
-
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+    return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha}%)`
 }
 
 // from https://github.com/zenozeng/color-hash
