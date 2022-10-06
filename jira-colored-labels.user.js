@@ -10,7 +10,7 @@
 // @match        https://*.atlassian.net/jira/core/projects/*
 // @match        https://*.atlassian.net/jira/software/c/projects/*/boards/*
 // @match        https://*.atlassian.net/jira/software/c/projects/*
-// @icon         https://www.atlassian.com/favicon.ico
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=atlassian.com
 // @grant        none
 // ==/UserScript==
 
