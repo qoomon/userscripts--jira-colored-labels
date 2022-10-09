@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Colored Labels
 // @namespace    https://qoomon.github.io
-// @version      1.1.3
+// @version      1.1.4
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
@@ -123,34 +123,24 @@ window.addEventListener('changestate', async () => {
             return document.querySelector('#ghx-work')
         }
     }
+
+    function detectProject() {
+        const project = {
+            key: document.location.pathname.match(/\/projects\/(?<project>[^/]+)\//).groups.project
+        }
+
+        if(document.location.pathname.startsWith('/jira/core')) {
+            project.type = 'team'
+        }
+        if(document.location.pathname.startsWith('/jira/software')) {
+            project.type = 'company'
+        }
+
+        return project
+    }
 })
 
-function detectProject() {
-    const project = {
-        key: document.location.pathname.match(/\/projects\/(?<project>[^/]+)\//).groups.project
-    }
-
-    if(document.location.pathname.startsWith('/jira/core')) {
-        project.type = 'team'
-    }
-    if(document.location.pathname.startsWith('/jira/software')) {
-        project.type = 'company'
-    }
-
-    return project
-}
-
-async function untilDefined(fn) {
-    return new Promise(resolve => {
-        const interval = setInterval(() => {
-            const result = fn()
-            if (result != undefined) {
-                clearInterval(interval)
-                resolve(result)
-            }
-        }, 100)
-        })
-}
+// --- Utils ---------------------------------------------------------------
 
 function hashColor(str, saturation = 50, lightness = 50, alpha = 100) {
     const hash = BKDRHash(str)
@@ -176,8 +166,20 @@ function BKDRHash(str) {
     return hash;
 };
 
+async function untilDefined(fn) {
+    return new Promise(resolve => {
+        const interval = setInterval(() => {
+            const result = fn()
+            if (result != undefined) {
+                clearInterval(interval)
+                resolve(result)
+            }
+        }, 100)
+        })
+}
 
-// -----------------------------------------------------------------------------
+
+// --- Event Management -----------------------------------------------------
 
 window.history.pushState = new Proxy(window.history.pushState, {
   apply: (target, thisArg, argArray) => {
