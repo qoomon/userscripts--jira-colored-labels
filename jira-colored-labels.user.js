@@ -35,7 +35,8 @@ window.addEventListener('changestate', async () => {
     console.debug('project:', project);
 
     const boardElement = await untilDefined(() => getBoardElement())
-    console.debug('board element:', boardElement)
+    if(boardElement._dependencyIndicator) return;
+    boardElement._dependencyIndicator = true;
 
     await updateCards()
 
