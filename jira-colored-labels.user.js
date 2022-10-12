@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Colored Labels
 // @namespace    https://qoomon.github.io
-// @version      1.1.4
+// @version      1.1.5
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
@@ -35,8 +35,8 @@ window.addEventListener('changestate', async () => {
     console.debug('project:', project);
 
     const boardElement = await untilDefined(() => getBoardElement())
-    if(boardElement._dependencyIndicator) return;
-    boardElement._dependencyIndicator = true;
+    if(boardElement._coloredLabels) return;
+    boardElement._coloredLabels = true;
 
     await updateCards()
 
