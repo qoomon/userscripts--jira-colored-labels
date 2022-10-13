@@ -77,6 +77,7 @@ window.addEventListener('changestate', async () => {
                               padding: 0px 4px;
                               overflow: hidden;
                               text-overflow: ellipsis;
+                              font-weight: 500;
                             `
                             labelContentElement.appendChild(spanElement)
                         })
