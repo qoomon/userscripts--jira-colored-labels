@@ -71,8 +71,8 @@ window.addEventListener('changestate', async () => {
                             const spanElement = document.createElement('span')
                             spanElement.innerText = label
                             spanElement.style.cssText += `
-                              color: white;
-                              background-color: ${hashColor(label, 90, 40)};
+                              color: ${hashColor(label, 91, 20)};
+                              background-color: ${hashColor(label, 90, 90)};
                               border-radius: 3px;
                               padding: 0px 4px;
                               overflow: hidden;
@@ -91,7 +91,7 @@ window.addEventListener('changestate', async () => {
                         const label = spanElement.innerText
                         spanElement.style.cssText += `
                           color: ${hashColor(label, 91, 20)};
-                          background-color: ${hashColor(label, 100, 95)};
+                          background-color: ${hashColor(label, 90, 90)};
                         `
                     })
                 })
