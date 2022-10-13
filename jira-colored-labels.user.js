@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Colored Labels
 // @namespace    https://qoomon.github.io
-// @version      1.1.5
+// @version      1.1.6
 // @updateURL    https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @downloadURL  https://github.com/qoomon/userscript-jira-colored-labels/raw/main/jira-colored-labels.user.js
 // @description  try to take over the world!
@@ -71,8 +71,8 @@ window.addEventListener('changestate', async () => {
                             const spanElement = document.createElement('span')
                             spanElement.innerText = label
                             spanElement.style.cssText += `
-                              color: ${hashColor(label, 91, 20)};
-                              background-color: ${hashColor(label, 100, 95)};
+                              color: white;
+                              background-color: ${hashColor(label, 90, 40)};
                               border-radius: 3px;
                               padding: 0px 4px;
                               overflow: hidden;
@@ -155,7 +155,7 @@ function BKDRHash(str) {
     var seed2 = 137;
     var hash = 0;
     // make hash more sensitive for short string like 'a', 'b', 'c'
-    str += 'x';
+    str += '#';
     // Note: Number.MAX_SAFE_INTEGER equals 9007199254740991
     var MAX_SAFE_INTEGER = Math.floor(9007199254740991 / seed2);
     for(let i = 0; i < str.length; i++) {
